@@ -43,6 +43,7 @@ public class IncompatibleChangesTest {
     public void setupTest() {
         Config config = new Config();
         config.setClusterName(randomName());
+        config.setLicenseKey(System.getenv("HZ_LICENSEKEY"));
 
         // enables jet
         JetConfig jetConf =  new JetConfig();

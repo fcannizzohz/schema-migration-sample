@@ -15,13 +15,16 @@
     </properties>
 
     <dependencies>
-        <!-- Hazelcast client (includes Jet APIs in 5.5.x) -->
         <dependency>
             <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast</artifactId>
+            <artifactId>hazelcast-enterprise</artifactId>
             <version>${hazelcast.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-sql</artifactId>
+            <version>${hazelcast.version}</version>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>com.hazelcast</groupId>

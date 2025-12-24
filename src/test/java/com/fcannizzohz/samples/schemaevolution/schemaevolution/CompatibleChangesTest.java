@@ -4,12 +4,9 @@ import com.fcannizzohz.samples.schemaevolution.model.Order;
 import com.fcannizzohz.samples.schemaevolution.model.OrderV2;
 import com.fcannizzohz.samples.schemaevolution.serializers.OrderSerializer;
 import com.fcannizzohz.samples.schemaevolution.serializers.OrderV2Serializer;
-import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.test.TestHazelcastFactory;
-import com.hazelcast.config.CompactSerializationConfig;
 import com.hazelcast.config.Config;
-import com.hazelcast.config.SerializationConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.hazelcast.nio.serialization.compact.CompactSerializer;
@@ -37,6 +34,7 @@ public class CompatibleChangesTest {
     public void setupTest() {
         Config config = new Config();
         clusterName = randomName();
+        config.setLicenseKey(System.getenv("HZ_LICENSEKEY"));
         config.setClusterName(clusterName);
         hazelcastFactory.newHazelcastInstance(config);
     }
