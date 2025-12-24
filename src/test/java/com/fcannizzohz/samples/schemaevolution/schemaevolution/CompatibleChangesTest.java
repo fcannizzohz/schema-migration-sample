@@ -26,7 +26,6 @@ import static org.junit.Assert.assertEquals;
 public class CompatibleChangesTest {
 
     private static TestHazelcastFactory hazelcastFactory;
-    private HazelcastInstance instance;
     private String clusterName;
 
     @BeforeClass
@@ -39,7 +38,7 @@ public class CompatibleChangesTest {
         Config config = new Config();
         clusterName = randomName();
         config.setClusterName(clusterName);
-        instance = hazelcastFactory.newHazelcastInstance(config);
+        hazelcastFactory.newHazelcastInstance(config);
     }
 
     @AfterClass
