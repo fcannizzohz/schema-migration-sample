@@ -12,7 +12,6 @@ import com.hazelcast.jet.config.JetConfig;
 import com.hazelcast.jet.config.JobConfig;
 import com.hazelcast.jet.config.ProcessingGuarantee;
 import com.hazelcast.jet.core.JobStatus;
-import com.hazelcast.jet.impl.exception.CancellationByUserException;
 import com.hazelcast.jet.pipeline.Pipeline;
 import com.hazelcast.map.IMap;
 import org.junit.AfterClass;
@@ -64,7 +63,7 @@ public class IncompatibleChangesTest {
     }
 
     @Test
-    public void testDataMigratedInBulk() {
+    public void test_DataMigrated_InBulk() {
         // creates two orders before running the bulk pipeline
         OrderV2 o1 = new OrderV2(1, 123L, BigDecimal.valueOf(100), "pending", "USD");
         OrderV2 o2 = new OrderV2(2, 456L, BigDecimal.valueOf(200), "pending", "EUR");
@@ -90,7 +89,7 @@ public class IncompatibleChangesTest {
     }
 
     @Test
-    public void testDataMigratedForNewEntries() {
+    public void test_DataMigrated_For_NewEntries() {
         JobConfig cfg = new JobConfig()
                 .setName("tail-v2-to-v3")
                 .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE);
@@ -103,23 +102,20 @@ public class IncompatibleChangesTest {
         OrderV2 o2 = new OrderV2(2, 456L, BigDecimal.valueOf(200), "pending", "EUR");
 
         try(ExecutorService executor = Executors.newSingleThreadExecutor()) {
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
+            executor.submit(() -> {
 
-                    // waits for pipeline to run
-                    assertEqualsEventually(job::getStatus, JobStatus.RUNNING);
+                // waits for pipeline to run
+                assertEqualsEventually(job::getStatus, JobStatus.RUNNING);
 
-                    // puts two orders in the old map
-                    instance.getMap("orders").put(o1.id(), o1);
-                    instance.getMap("orders").put(o2.id(), o2);
+                // puts two orders in the old map
+                instance.getMap("orders").put(o1.id(), o1);
+                instance.getMap("orders").put(o2.id(), o2);
 
-                    // waits for the pipeline to migrate the two orders
-                    assertSizeEventually(2, instance.getMap("orders_v3"));
+                // waits for the pipeline to migrate the two orders
+                assertSizeEventually(2, instance.getMap("orders_v3"));
 
-                    // cancels the pipeline to unblock the test
-                    job.cancel();
-                }
+                // cancels the pipeline to unblock the test
+                job.cancel();
             });
         }
 

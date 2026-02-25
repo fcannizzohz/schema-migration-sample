@@ -4,19 +4,16 @@ import com.fcannizzohz.samples.schemaevolution.model.Order;
 import com.fcannizzohz.samples.schemaevolution.model.OrderV2;
 import com.fcannizzohz.samples.schemaevolution.serializers.OrderSerializer;
 import com.fcannizzohz.samples.schemaevolution.serializers.OrderV2Serializer;
-import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.test.TestHazelcastFactory;
 import com.hazelcast.config.CompactSerializationConfig;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.jet.config.JetConfig;
-import com.hazelcast.map.IMap;
 import com.hazelcast.nio.serialization.compact.CompactSerializer;
 import com.hazelcast.sql.SqlResult;
 import com.hazelcast.sql.SqlRow;
 import com.hazelcast.sql.SqlService;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,7 +30,7 @@ public class CompatibleChangesWithSQLTest {
 
     private static TestHazelcastFactory hazelcastFactory;
 
-    private static String MAPPING_V1 = """
+    private static final String MAPPING_V1 = """
             CREATE OR REPLACE MAPPING orders (
                 id BIGINT,
                 customerId BIGINT,
@@ -48,7 +45,7 @@ public class CompatibleChangesWithSQLTest {
             );
             """;
 
-    private static String MAPPING_V2 = """
+    private static final String MAPPING_V2 = """
             CREATE OR REPLACE MAPPING orders (
                 id BIGINT,
                 customerId BIGINT,
@@ -89,7 +86,7 @@ public class CompatibleChangesWithSQLTest {
     }
 
     @Test
-    public void testClientSQLReadsOnlyOldMappingWithOldSerializer() {
+    public void test_ClientSQL_Reads_OnlyOldMapping_With_OldSerializer() {
         HazelcastInstance instance = setupInstance(new OrderSerializer());
         SqlService sql = instance.getSql();
         try(SqlResult r = sql.execute(MAPPING_V1)) {
@@ -116,7 +113,7 @@ public class CompatibleChangesWithSQLTest {
     }
 
     @Test
-    public void testClientSQLReadsOldAndNewMappingWithNewSerializer() {
+    public void test_ClientSQL_Reads_OldAndNewMapping_With_NewSerializer() {
         HazelcastInstance instance = setupInstance(new OrderV2Serializer());
         SqlService sql = instance.getSql();
         try(SqlResult r = sql.execute(MAPPING_V2)) {

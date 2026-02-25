@@ -45,7 +45,7 @@ public class CompatibleChangesTest {
     }
 
     @Test
-    public void testClientCanReadOrderV2AsOrder() {
+    public void test_ClientCanRead_OrderV2_As_Order() {
 
         HazelcastInstance clientInstance1 = getHazelcastInstanceWithSerializer(new OrderSerializer());
         HazelcastInstance clientInstance2= getHazelcastInstanceWithSerializer(new OrderV2Serializer());
@@ -61,7 +61,7 @@ public class CompatibleChangesTest {
     }
 
     @Test
-    public void testClientCanReadOrderAsOrderV2() {
+    public void test_ClientCanRead_Order_As_OrderV2() {
 
         HazelcastInstance clientInstance1 = getHazelcastInstanceWithSerializer(new OrderSerializer());
         HazelcastInstance clientInstance2= getHazelcastInstanceWithSerializer(new OrderV2Serializer());
