@@ -70,13 +70,14 @@ public class IncompatibleChangesTest {
         instance.getMap("orders").put(o1.id(), o1);
         instance.getMap("orders").put(o2.id(), o2);
 
+        IMap<Long, OrderV3> ordersV3 = instance.getMap("orders_v3");
+        assertSizeEventually(0, ordersV3);
+
         JobConfig cfg = new JobConfig()
                 .setName("bulk-v2-to-v3")
                 .setProcessingGuarantee(ProcessingGuarantee.AT_LEAST_ONCE);
         // runs the bulk pipeline
         instance.getJet().newJob(V2toV3PipelineFactory.createBulkPipeline(), cfg).join();
-
-        IMap<Long, OrderV3> ordersV3 = instance.getMap("orders_v3");
 
         // checks that existing orders have been migrated
         assertSizeEventually(2, ordersV3);
