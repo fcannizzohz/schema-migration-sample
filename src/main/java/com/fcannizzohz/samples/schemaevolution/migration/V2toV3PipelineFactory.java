@@ -49,7 +49,12 @@ public class V2toV3PipelineFactory {
     private static Map.Entry<Long, OrderV3> getLongOrderV3Entry(Map.Entry<Long, OrderV2> e) {
         OrderV2 v2 = e.getValue();
         System.out.println("mapping " + v2);
-        return Map.entry(v2.id(), new OrderV3(v2.id(), v2.customerId(), v2.amount(), v2.status(), v2.currency()));
+        return Map.entry(v2.id(), new OrderV3(
+                v2.id(),
+                accountIdFromCustomerId(v2.customerId()),
+                v2.amount(),
+                v2.status(),
+                v2.currency()));
     }
 
     public static final class ValueIsNullFilter
@@ -87,5 +92,10 @@ public class V2toV3PipelineFactory {
             return true;
         }
     }
+
+    private static long accountIdFromCustomerId(long l) {
+        return l;
+    }
+
 }
 

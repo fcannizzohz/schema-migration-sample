@@ -9,6 +9,10 @@ import com.hazelcast.nio.serialization.compact.CompactWriter;
 import java.util.Optional;
 
 public final class OrderV2Serializer implements CompactSerializer<OrderV2> {
+
+    // This should be externalised configuration
+    public static String DEFAULT_CURRENCY = "GBP";
+
     @Override
     public String getTypeName() {
         return "com.acme.Order"; // same typeName: same logical type
@@ -30,9 +34,12 @@ public final class OrderV2Serializer implements CompactSerializer<OrderV2> {
 
     @Override
     public OrderV2 read(CompactReader r) {
-        String currency = "GBP";
+        String currency = DEFAULT_CURRENCY;
         if (r.getFieldKind("currency") == FieldKind.STRING) {
-            currency = Optional.ofNullable(r.readString("currency")).orElse("GBP");
+            // this check fails if this record hasn't been written by this serializer
+            // it makes this serializer version aware, without being version specific
+            // we don't encode version specific logic here
+            currency = r.readString("currency");
         }
         return new OrderV2(
                 r.readInt64("id"),

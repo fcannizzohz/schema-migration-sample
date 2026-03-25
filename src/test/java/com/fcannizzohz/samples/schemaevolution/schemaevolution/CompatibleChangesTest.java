@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
+import static com.fcannizzohz.samples.schemaevolution.serializers.OrderV2Serializer.DEFAULT_CURRENCY;
 import static com.hazelcast.test.HazelcastTestSupport.randomName;
 import static org.junit.Assert.assertEquals;
 
@@ -74,7 +75,7 @@ public class CompatibleChangesTest {
         assertEquals(order.customerId(), orderV2.customerId());
         assertEquals(order.status(), orderV2.status());
         assertEquals(order.amount(), orderV2.amount());
-        assertEquals("GBP", orderV2.currency());
+        assertEquals(DEFAULT_CURRENCY, orderV2.currency());
     }
 
     private HazelcastInstance getHazelcastInstanceWithSerializer(CompactSerializer<?> ser) {
